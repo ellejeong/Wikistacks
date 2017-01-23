@@ -11,47 +11,35 @@ var Page = db.define('page', {
 
   urlTitle: {
     type: Sequelize.STRING,
-    allowNull: false,
-    //isURL: true,
   },
 
   content: {
     type: Sequelize.TEXT,
     allowNull: false,
-    notEmpty: true
   },
 
   status: {
-    type: Sequelize.ENUM('open', 'closed')
-  },
+    type: Sequelize.ENUM,
+    values: ['open', 'closed']
+  }
 }, {
   getterMethods   : {
     route       : function()  { return '/wiki/' + this.urlTitle }
-  }
-}, {
+  },
   hooks: {
-    beforeValidate: function(){
-      if(this.title.length === 0){
-    var randomLength = Math.ceil(Math.random()*50);
-    this.urlTitle = createTitle(randomLength);
-
-    function createTitle(length){
-      var text = "";
-      var possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
-      for(var i = 0; i < length; i++){
-        text += possibleChars.charAt(Math.floor(Math.random()*possibleChars.length));
+    beforeValidate: function generateUrlTitle (page) {
+      console.log("TITLE-----", page.title);
+      if (page.title) {
+        // Removes all non-alphanumeric characters from title
+        // And make whitespace underscore
+        this.urlTitle = page.title.replace(/\s+/g, '_').replace(/\W/g, '');
+      } else {
+        // Generates random 5 letter string
+        this.urlTitle = Math.random().toString(36).substring(2, 7);
       }
-      return text;
     }
   }
-
-  else{
-    this.urlTitle = this.title.replace(" ", "_");
-  }
-  }
-  }
-}
-);
+});
 
 
 

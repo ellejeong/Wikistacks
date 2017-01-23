@@ -30,13 +30,13 @@ app.use("/", function(err, req, res, next){
   console.error(err);
 });
 
-db.User.sync({})
+db.User.sync({force: true})
   .then(function(){
-    return db.Page.sync({});
+    return db.Page.sync({force: true});
   })
   .then(function(){
     app.listen(3000, function(){
-      console.log("Server is listening on port 3001!");
+      console.log("Server is listening on port 3000!");
     })
   })
   .catch(console.error);

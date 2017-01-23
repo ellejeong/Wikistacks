@@ -9,43 +9,21 @@ module.exports = router;
 
 router.use(express.static('public'));
 
-// router.get("/", function(req, res, next){
-//   res.send("Homepage note");
-// });
 
 router.get("/", function(req, res, next){
   res.send("First GET worked!");
 });
 
 router.post("/", function(req, res, next){
-  var page = Page.build({
+  Page.create({
     title: req.body.title,
-    content: req.body["Page Content"]
-  });
+    content: req.body.PageContent
+  })
+  .then(function(){
+    res.json(req.body)
+  })
+  .catch(console.error);
 
-  // if(page.title.length === 0){
-  //   var randomLength = Math.random()*50;
-  //   page.urlTitle = createTitle(randomLength);
-
-  //   function createTitle(length){
-  //     var text = "";
-  //     var possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
-  //     for(var i = 0; i < length; i++){
-  //       text += possibleChars.charAt(Math.floor(Math.random()*possibleChars.length));
-  //     }
-  //     return text;
-  //   }
-  // }
-
-  // else{
-  //   page.urlTitle = page.title.replace(" ", "_");
-  // }
-
-  page.save();
-  //next();
-  //res.redirect('/');
-
-res.json(req.body);
 });
 
 router.get("/add", function(req, res, next){
